@@ -12,7 +12,7 @@ public class DeckScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        GetCardValues();
     }
 
     // Update is called once per frame
@@ -21,7 +21,7 @@ public class DeckScript : MonoBehaviour
         int num = 0;
         for (int i = 0; i < cardSprites.Length; i++)
         {
-            num++;
+            num = i;
             num %= 13;
             if(num > 10 || num == 0)
             {
@@ -35,17 +35,17 @@ public class DeckScript : MonoBehaviour
     public void Shuffle()
     {
 
-        for (int i = cardSprites.Length - 1; i > 0; i--)
+        for (int i = cardSprites.Length - 1; i > 0; --i)
         {
             int j = Mathf.FloorToInt(Random.Range(0.0f, 1.0f) * cardSprites.Length - 1) + 1;
             Sprite face = cardSprites[i];
 
-            cardSprites[i] = cardSprites[i];
-            cardSprites[i] = face;
+            cardSprites[i] = cardSprites[j];
+            cardSprites[j] = face;
 
             int value = cardvalues[i];
-            cardvalues[i] = cardvalues[i];
-            cardvalues[i] = value;
+            cardvalues[i] = cardvalues[j];
+            cardvalues[j] = value;
 
 
         }

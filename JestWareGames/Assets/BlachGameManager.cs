@@ -9,10 +9,14 @@ public class BlachGameManager : MonoBehaviour
 {
     [SerializeField] Button dealButton, hitButton, standButton, betButton;
 
-    [SerializeField]
-    PlayerScript playerScript;
-    [SerializeField]
-    PlayerScript dealerScript;
+    
+    public PlayerScript playerScript;
+    public PlayerScript dealerScript;
+
+    int standClicks = 0;
+
+   [ SerializeField]
+   TextMeshProUGUI standButtonText;
 
     // Start is called before the first frame update
     void Start()
@@ -29,17 +33,36 @@ public class BlachGameManager : MonoBehaviour
 
     private void DealClicked()
     {
+        GameObject.Find("DeckController").GetComponent<DeckScript>().Shuffle();
         playerScript.StartHand();
+        dealerScript.StartHand();
     }
     private void hitClicked()
     {
-        throw new NotImplementedException();
+        if(playerScript.GetCard() <= 10)
+        {
+            playerScript.GetCard();
+        }
+
+
     }
     private void standClicked()
     {
-        throw new NotImplementedException();
+        standClicks++;
+        if(standClicks > 1)
+        {
+            hitDealer();
+            standButtonText.text = "Call";
+        }
     }
 
+    void hitDealer()
+    {
+        while (dealerScript.handValue < 16 && dealerScript.cardIndex < 10)
+        {
+            dealerScript.GetCard();
+        }
+    }
 
 
 
