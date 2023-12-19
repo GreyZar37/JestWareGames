@@ -118,11 +118,8 @@ public class BETPenge : MonoBehaviour
         }
     }
 
-    public void køb()
+    public void kï¿½b()
     {
-
-  
-
         if (pris == 0)
         {
             pris = 100;
@@ -150,8 +147,6 @@ public class BETPenge : MonoBehaviour
             PlayerPrefs.SetFloat("Pris" + name_, pris);
             PlayerPrefs.SetFloat("Multiplier" + name_, multiplier);
             PlayerPrefs.SetString("Bought" + name_, "Yes");
-
         }
-
     }
 }

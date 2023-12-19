@@ -21,6 +21,20 @@ public class ScreenShake : MonoBehaviour
             isShaking = false;
             StartCoroutine(shake());
 
+            for (int i = 0; i < 5; i++)
+            {
+                print("L");
+            }
+
+            while (true)
+            {
+                print("L");
+            }
+
+            do
+            {
+                print("L");
+            } while (false);
 
         }
     }
@@ -41,4 +55,7 @@ public class ScreenShake : MonoBehaviour
         }
         transform.position = startPosition;
     }
+    
+   
 }
+

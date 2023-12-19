@@ -49,14 +49,11 @@ public class BETMANAGER : MonoBehaviour
 
     float clickTimer;
 
-    // Start is called before the first frame update
     void Start()
     {
         dudeAnimator.SetBool("IsBetting", true);
-
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(clickTimer > 0)
@@ -66,7 +63,6 @@ public class BETMANAGER : MonoBehaviour
         }
 
 
-        betNotifikation.text = notifikationNum.ToString();
         if(jackPot == true)
         {
           
@@ -84,104 +80,85 @@ public class BETMANAGER : MonoBehaviour
             }
 
         }
+        
+        betNotifikation.text = notifikationNum.ToString();
+
     }
 
-    public void bet()
+    public void Bet()
     {
         odds = Random.Range(1, 105);
+        if (!(BackAccount.penge > 20) || !(clickTimer <= 0)) return;
+        audiosource.Stop();
+        audiosource.PlayOneShot(koKlokke, 0.2f);
+        alowedToWithdraw = true;
 
-        if (BackAccount.penge > 20 && clickTimer <= 0)
+        betParticle.Play();
+        ScreenShake.isShaking = true;
+
+        switch (odds)
         {
-            audiosource.Stop();
-            audiosource.PlayOneShot(koKlokke, 0.2f);
-            alowedToWithdraw = true;
-
-            betParticle.Play();
-            ScreenShake.isShaking = true;
-
-            if (odds > 103)
-            {
+            case > 103:
                 jackPot = true;
                 audiosource.Stop();
                 audiosource.PlayOneShot(nuHolderDu);
                 pengeManFik = BackAccount.penge * 9.5f - BackAccount.penge;
                 BackAccount.penge *= 9.5f;
                 spriteRend.sprite = betDude[2];
-                jackPotShow();
+                JackPotShow();
 
                 vandt = true;
-
-            }
-            else if (odds > 97)
-            {
+                break;
+            case > 97:
                 pengeManFik = BackAccount.penge * 1.95f - BackAccount.penge;
                 BackAccount.penge *= 2.25f;
                 spriteRend.sprite = betDude[0];
                 vandt = true;
-
-
-            }
-            else if (odds > 85)
-            {
+                break;
+            case > 85:
                 pengeManFik = BackAccount.penge * 1.55f - BackAccount.penge;
                 BackAccount.penge *= 1.95f;
                 spriteRend.sprite = betDude[0];
                 vandt = true;
-
-
-
-            }
-            else if (odds > 65)
-            {
+                break;
+            case > 65:
                 pengeManFik = BackAccount.penge * 1.256f - BackAccount.penge;
                 BackAccount.penge *= 1.256f;
                 spriteRend.sprite = betDude[0];
 
                 vandt = true;
-
-
-
-            }
-            else if (odds > 40)
-            {
+                break;
+            case > 40:
                 pengeManFik = BackAccount.penge * 0.85f - BackAccount.penge;
 
                 BackAccount.penge *= 0.75f;
                 spriteRend.sprite = betDude[1];
 
                 vandt = false;
-
-            }
-            else if (odds > 10)
-            {
+                break;
+            case > 10:
                 pengeManFik = BackAccount.penge * 0.75f - BackAccount.penge;
 
                 BackAccount.penge *= 0.70f;
                 spriteRend.sprite = betDude[1];
 
                 vandt = false;
-
-            }
-            else
-            {
+                break;
+            default:
                 pengeManFik = BackAccount.penge * 0.70f - BackAccount.penge;
 
                 BackAccount.penge *= 0.60f;
                 spriteRend.sprite = betDude[1];
 
                 vandt = false;
-
-            }
-
-            spawnWinningSalary();
-            clickTimer = 0.3f;
+                break;
         }
 
-
-
+        SpawnWinningSalary();
+        clickTimer = 0.3f;
     }
     
-    public void deposit(int penge)
+    public void Deposit(int penge)
     {
         dudeAnimator.SetBool("IsBetting", true);
 
@@ -193,7 +170,7 @@ public class BETMANAGER : MonoBehaviour
 
         }
     }
-    public void allDeposit()
+    public void AllDeposit()
     {
 
         if(BackAccount.konto > 0)
@@ -210,13 +187,13 @@ public class BETMANAGER : MonoBehaviour
 
     }
 
-    public void quit()
+    public void Quit()
     {
         SaveData.instance.saveGame();
         Application.Quit();
         
     }
-    public void withDraw()
+    public void WithDraw()
     {
         if(alowedToWithdraw == true)
         {
@@ -242,7 +219,7 @@ public class BETMANAGER : MonoBehaviour
 
     }
 
-    public void closeDepositOrOpen()
+    public void CloseDepositOrOpen()
     {
         audiosource.Stop();
 
@@ -259,8 +236,11 @@ public class BETMANAGER : MonoBehaviour
     }
 
 
-    public void spawnWinningSalary()
+    public void SpawnWinningSalary()
     {
+        
+        
+         
 
         GameObject spawnedText = Instantiate(textPrefab, new Vector3(Random.Range(4, 9), 5, -5), Quaternion.Euler(0, 0, Random.Range(-15, 0)));
         TextMeshPro text = spawnedText.GetComponent<TextMeshPro>();
@@ -275,47 +255,19 @@ public class BETMANAGER : MonoBehaviour
 
         }
 
-
-
-        if (pengeManFik >= 1000 && pengeManFik < 1000000)
+        text.text = pengeManFik switch
         {
-            text.text =  (pengeManFik / 1000).ToString("f1") + "k " + "kr.";
-
-        }
-        else if (pengeManFik >= 1000000 && pengeManFik < 100000000000)
-        {
-            text.text = (pengeManFik / 1000000).ToString("f1") + "m " + "kr.";
-
-        }
-        else if (pengeManFik >= 100000000000)
-        {
-            text.text = (pengeManFik / 100000000000).ToString("f1") + "b " + "kr.";
-
-        }
-
-        else if (pengeManFik <= -1000 && pengeManFik > -1000000)
-        {
-            text.text = (pengeManFik / 1000).ToString("f1") + "k " + "kr.";
-
-        }
-        else if (pengeManFik <= -1000000 && pengeManFik > -100000000000)
-        {
-            text.text = (pengeManFik / 1000000).ToString("f1") + "m " + "kr.";
-
-        }
-        else if (pengeManFik <= -100000000000)
-        {
-            text.text = (pengeManFik / 100000000000).ToString("f1") + "b " + "kr.";
-
-        }
-        else
-        {
-            text.text = (pengeManFik).ToString("f1") + "kr.";
-
-        }
+            >= 1000 and < 1000000 => (pengeManFik / 1000).ToString("f1") + "k " + "kr.",
+            >= 1000000 and < 100000000000 => (pengeManFik / 1000000).ToString("f1") + "m " + "kr.",
+            >= 100000000000 => (pengeManFik / 100000000000).ToString("f1") + "b " + "kr.",
+            <= -1000 and > -1000000 => (pengeManFik / 1000).ToString("f1") + "k " + "kr.",
+            <= -1000000 and > -100000000000 => (pengeManFik / 1000000).ToString("f1") + "m " + "kr.",
+            <= -100000000000 => (pengeManFik / 100000000000).ToString("f1") + "b " + "kr.",
+            _ => (pengeManFik).ToString("f1") + "kr."
+        };
     }
 
-    public void openKvik()
+    public void OpenKvik()
     {
         kvikPanel.SetBool("Open", true);
        
@@ -323,7 +275,7 @@ public class BETMANAGER : MonoBehaviour
         audiosource.PlayOneShot(skalDuHaveKvik);
 
     }
-    public void openLeaderBoard()
+    public void OpenLeaderBoard()
     {
 
         leaderBoard.SetBool("Open", true);
@@ -334,7 +286,7 @@ public class BETMANAGER : MonoBehaviour
         audiosource.PlayOneShot(quit_);
 
     }
-    public void luckKvik()
+    public void LuckKvik()
     {
         
         kvikPanel.SetBool("Open", false);
@@ -344,31 +296,19 @@ public class BETMANAGER : MonoBehaviour
 
 
 
-    void jackPotShow()
+    void JackPotShow()
     {
         jackpotMenu.SetActive(true);
         winJackbot[0].SetActive(true);
         winJackbot[1].SetActive(true);
 
-        if (pengeManFik >= 1000 && pengeManFik < 1000000)
+        jackPotWinTxt.text = pengeManFik switch
         {
-            jackPotWinTxt.text = (pengeManFik / 1000).ToString("f1") + "k " + "kr.";
-
-        }
-        else if (pengeManFik >= 1000000 && pengeManFik < 100000000000)
-        {
-            jackPotWinTxt.text = (pengeManFik / 1000000).ToString("f1") + "m " + "kr.";
-
-        }
-        else if (pengeManFik >= 100000000000)
-        {
-            jackPotWinTxt.text = (pengeManFik / 100000000000).ToString("f1") + "b " + "kr.";
-
-        }
-        else
-        {
-            jackPotWinTxt.text = (pengeManFik).ToString("f2") + "kr.";
-        }
+            >= 1000 and < 1000000 => (pengeManFik / 1000).ToString("f1") + "k " + "kr.",
+            >= 1000000 and < 100000000000 => (pengeManFik / 1000000).ToString("f1") + "m " + "kr.",
+            >= 100000000000 => (pengeManFik / 100000000000).ToString("f1") + "b " + "kr.",
+            _ => (pengeManFik).ToString("f2") + "kr."
+        };
     }
     
 
